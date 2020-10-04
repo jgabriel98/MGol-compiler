@@ -7,7 +7,7 @@
 #include <iostream>
 
 
-enum Estados{ S0=0, SPV, SPAR_0, SPAR_1, SOPR_1, SOPR_2, SOPR_3, SOPR_4, SATR, SOPA, SL_0, SL_1, SEOF, SC_0, SC_1, SID, SN_0, SN_1, SN_2, SN_1_2, SN_3, SN_4,
+enum Estados{ S0=0, SPV, SPAR_0, SPAR_1, SOPR_1, SOPR_2, SOPR_3, SOPR_4, SATR, SOPA, SL_0, SL_1, SEOF, SC_0, SC_1, SID, SN_0, SN_1, SN_2, SN_1_2, SN_3, SN_4, SB,
 			  REJECT = -1
 };
 
@@ -33,8 +33,8 @@ int main() {
 	//istringstream istr("es");
 	std::ifstream istr("example.mgol");
 
-	printf("%-15.15s | %10.10s | %10.10s | %s\n", "lexema", "token", "tipo", "erro");
-	printf("--------------- | ---------- | ---------- | \n");
+	printf("%-20s | %10s | %10s | %s\n", "lexema", "token", "tipo", "erro");
+	printf("-------------------- | ---------- | ---------- | \n");
 	do {
 		token = scanner.analyze(istr);
 		//imprimindo token
@@ -95,6 +95,9 @@ void configura_analisador_lexico(LexicalAnalizer &scanner) {
 	scanner.add_transition(S0,        	SC_0,           '{');
 	scanner.add_transition(SC_0,       	SC_0,           scanner.wild_card({'}'}));
 	scanner.add_transition(SC_0,       	SC_1,           '}');
+	//espaços em branco
+	scanner.add_transition(S0,			SB,				{' ','\t','\n'});
+	scanner.add_transition(SB,			SB,				{' ','\t','\n'});
 
 	//identificadores
 	scanner.add_transition(S0,        	SID,           	LETRAS);
@@ -136,6 +139,9 @@ void configura_analisador_lexico(LexicalAnalizer &scanner) {
 
 	scanner.add_final_state(SPV,	{Tokens::PT_V, Token_types::unknow});			//ponto e vírgula
 	scanner.add_final_state(SC_1,	{Tokens::Comentario, Token_types::unknow});		//comentário
+	scanner.add_final_state(SB,		{Tokens::Espaco, Token_types::unknow});		//comentário
+	scanner.ignore_state(SC_1);
+	scanner.ignore_state(SB);
 	
 	//numeros
 	scanner.add_final_state(SN_0,	{Tokens::Num, Token_types::Inteiro});

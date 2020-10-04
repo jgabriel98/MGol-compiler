@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+#include "color.h"
 
 
 vector<char> LexicalAnalizer::wild_card(const vector<char> &ignore = {}){
@@ -39,6 +40,10 @@ void LexicalAnalizer::add_final_state(int state, pair<Tokens, Token_types> state
         id_final_states.insert(state);
 }
 
+void LexicalAnalizer::ignore_state(int state) {
+    ignored_final_states.insert(state);
+}
+
 void LexicalAnalizer::add_transition(int src, int dest, char c) {
     automata.add_transition(src, dest, c);
 }
@@ -48,60 +53,47 @@ void LexicalAnalizer::add_transition(int src, int dest, const vector<char> &list
         automata.add_transition(src, dest, c);
 }
 
-void LexicalAnalizer::ignore_white_spaces(istream &text_stream) {
-    while(true) {
-        char c = text_stream.peek(); text_stream.get();
-        if(c==' ' || c=='\t') {
-            column_count++;
-        } else if(c=='\n') {
-            column_count = 0;
-            line_count++;
-        } else {
-            break;
-        }
-    }
-    text_stream.unget();
-}
-
 Token_attributes LexicalAnalizer::analyze(istream &text_stream) {
     char c;
     int new_state, state = automata.initial_state();
     Token_attributes token_attr = {};
-
-    
-    ignore_white_spaces(text_stream);
     
     while (true) {
         c = text_stream.peek(); text_stream.get();
         new_state = automata.process_char(state, c);
         token_attr.lexema.push_back(c);
-        column_count++;
 
-        if(new_state == automata.rejection_state()){    //estado de rejeição pq deu erro ou pq terminou de aceitar o lexema
+        if(new_state == automata.rejection_state()) {       //parou num estado de rejeição pq deu erro ou pq terminou de aceitar o lexema
+            if(automata.is_final_state(state)) {
+                text_stream.unget();
+
+                if(is_ignored_final_state(state)) {
+                    token_attr.lexema.clear();
+                    state = automata.initial_state();
+                    continue;                
+                } else {
+                    token_attr.lexema.pop_back();
+
+                    token_attr.token = final_states_token_attr[state].first;
+                    token_attr.tipo = final_states_token_attr[state].second;
+                    add_token_to_simbols_if_allowed(state, token_attr);
+                }
+
+            } else {    //deu erro mesmo
+                token_attr.token = Tokens::ERRO;
+                token_attr.tipo = Token_types::unknow;
+
+                error_s.clear();
+                error_s << "Erro ao processar o lexema " << SetBOLD << token_attr.lexema << RESETTEXT << ": o caractere " << SetForeRED<<SetBOLD<< c << RESETTEXT 
+                        << " não foi reconhecido na linha " << line_count << " e coluna " << (column_count);                
+            }
+            
             break;
+        } else {
+            count_line_column(c);
         }
         
         state = new_state;
-    }
-
-    if(automata.is_final_state(state)){
-        text_stream.unget();
-        token_attr.lexema.pop_back();
-        column_count--;
-
-        token_attr.token = final_states_token_attr[state].first;
-        token_attr.tipo = final_states_token_attr[state].second;
-
-        if(id_final_states.count(state)){
-            simbols_table[token_attr.lexema] = token_attr;
-        }
-
-    } else {
-        token_attr.token = Tokens::ERRO;
-        token_attr.tipo = Token_types::unknow;
-
-        error_s.clear();
-        error_s << "O lexema " << token_attr.lexema << " não foi reconhecido, na linha " << line_count << " e coluna " << column_count;
     }
 
     return token_attr;
