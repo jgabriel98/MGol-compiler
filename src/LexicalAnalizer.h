@@ -2,6 +2,7 @@
 #define LEXICAL_ANALIZER_HEADER
 
 #include "Automata.h"
+#include "utils.h"
 #include <unordered_map>
 #include <vector>
 
@@ -11,6 +12,7 @@ using namespace std;
 
 enum Tokens {
     ERRO,
+    inicio, varinicio, varfim, escreva, leia, se, entao, fimse, fim, inteiro, lit, real,	//palavras reservadas
     Num,
     Literal,
     id,
@@ -45,8 +47,8 @@ class LexicalAnalizer {
 
 private:
     Automata automata;
+	unordered_set<int> id_final_states;
     unordered_map<int, pair<Tokens, Token_types>> final_states_token_attr;
-    vector<Token_attributes> simbols_table;
     unsigned int line_count = 1;
     unsigned int column_count = 1;
 
@@ -55,22 +57,23 @@ private:
 public:
 
     stringstream error_s;
+    unordered_map<string, Token_attributes> simbols_table;
+
 
     LexicalAnalizer(int initial_state);
 
     LexicalAnalizer(int initial_state, int rejection_state);
-
-    void add_final_state(int state, pair<Tokens, Token_types> state_token_attributes);
 
     void add_transition(int src, int dest, char c);
 
     /** cria uma transicao do estado src para dest, para cada item em list_of_chars*/
     void add_transition(int src, int dest, const vector<char> &list_of_chars);
 
+    void add_final_state(int state, pair<Tokens, Token_types> state_token_attributes, bool is_id_indicator = false);
+    
+	Token_attributes analyze(istream &text_stream);
+
     static vector<char> wild_card(const vector<char> &ignore);
-
-    Token_attributes analyze(istream &text_stream);
-
 };
 
 #endif

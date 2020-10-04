@@ -18,33 +18,53 @@ const vector<char> LETRAS = {
 
 
 void configura_analisador_lexico(LexicalAnalizer &lexical_analizer);
+void preenche_tabela_de_simbolos(LexicalAnalizer &lexical_analizer);
+
+
 
 
 int main() {
 
     LexicalAnalizer scanner = LexicalAnalizer(S0, REJECT);
 	configura_analisador_lexico(scanner);
+	preenche_tabela_de_simbolos(scanner);
 
+	Token_attributes token;
 	//istringstream istr("es");
 	std::ifstream istr("example.mgol");
 
-	Token_attributes token;
+	printf("%-15.15s | %10.10s | %10.10s | %s\n", "lexema", "token", "tipo", "erro");
+	printf("--------------- | ---------- | ---------- | \n");
 	do {
 		token = scanner.analyze(istr);
-		compact_print_token_attributes(token);
-		if(scanner.error_s.peek() != EOF){
-			cout << scanner.error_s.str();
-			scanner.error_s.flush();
-		}
+		//imprimindo token
+		full_print_token_attributes(token, scanner);
 	} while (token.token != Tokens::EOF_t);
 	
 
-	printf("saindo");
+	printf("\n\n");
+	print_simbols_table(scanner);
+
+	return 0;
 }
 
 
+void preenche_tabela_de_simbolos(LexicalAnalizer &lexical_analizer) {
+	lexical_analizer.simbols_table["inicio"]	=	{Tokens::inicio,	Token_types::unknow, "inicio"};
+	lexical_analizer.simbols_table["varinicio"]	=	{Tokens::varinicio,	Token_types::unknow, "varinicio"};
+	lexical_analizer.simbols_table["varfim"]	=	{Tokens::varfim,	Token_types::unknow, "varfim"};
+	lexical_analizer.simbols_table["escreva"]	=	{Tokens::escreva,	Token_types::unknow, "escreva"};
+	lexical_analizer.simbols_table["leia"]		=	{Tokens::leia,		Token_types::unknow, "leia"};
+	lexical_analizer.simbols_table["se"]		=	{Tokens::se,		Token_types::unknow, "se"};
+	lexical_analizer.simbols_table["entao"]		=	{Tokens::entao,		Token_types::unknow, "entao"};
+	lexical_analizer.simbols_table["fimse"]		=	{Tokens::fimse,		Token_types::unknow, "fimse"};
+	lexical_analizer.simbols_table["fim"]		=	{Tokens::fim,		Token_types::unknow, "fim"};
+	lexical_analizer.simbols_table["inteiro"]	=	{Tokens::inteiro,	Token_types::unknow, "inteiro"};
+	lexical_analizer.simbols_table["lit"]		=	{Tokens::lit,		Token_types::unknow, "lit"};
+	lexical_analizer.simbols_table["real"]		=	{Tokens::real,		Token_types::unknow, "real"};
+}
 
-void configura_analisador_lexico(LexicalAnalizer &scanner){
+void configura_analisador_lexico(LexicalAnalizer &scanner) {
 
 	/********** Criando trasições de estados **********/
 	//parenteses
@@ -99,25 +119,29 @@ void configura_analisador_lexico(LexicalAnalizer &scanner){
 
     /********* configurando estados finais, e vinculando com seus respectivos atributos/tokens *********/
 
-	scanner.add_final_state(SL_1,	{Tokens::Literal, Token_types::unknow});
-	scanner.add_final_state(SID, 	{Tokens::id, Token_types::unknow});
-	scanner.add_final_state(SATR,	{Tokens::RCB, Token_types::unknow});
+	scanner.add_final_state(SL_1,	{Tokens::Literal, Token_types::unknow});	//literais
+	scanner.add_final_state(SID, 	{Tokens::id, Token_types::unknow}, true);	//identificador
+	scanner.add_final_state(SATR,	{Tokens::RCB, Token_types::unknow});		//atribuição
 
+	//operadores relacionais
 	scanner.add_final_state(SOPA,	{Tokens::OPM, Token_types::unknow});	
 	scanner.add_final_state(SOPR_1, {Tokens::OPR, Token_types::unknow});
 	scanner.add_final_state(SOPR_2, {Tokens::OPR, Token_types::unknow});
 	scanner.add_final_state(SOPR_3, {Tokens::OPR, Token_types::unknow});
 	scanner.add_final_state(SOPR_4, {Tokens::OPR, Token_types::unknow});
 	
+	//parenteses
 	scanner.add_final_state(SPAR_0,	{Tokens::AB_P, Token_types::unknow});
 	scanner.add_final_state(SPAR_1,	{Tokens::FC_P, Token_types::unknow});
 
-	scanner.add_final_state(SPV,	{Tokens::PT_V, Token_types::unknow});
-	scanner.add_final_state(SC_1,	{Tokens::Comentario, Token_types::unknow});
+	scanner.add_final_state(SPV,	{Tokens::PT_V, Token_types::unknow});			//ponto e vírgula
+	scanner.add_final_state(SC_1,	{Tokens::Comentario, Token_types::unknow});		//comentário
 	
+	//numeros
 	scanner.add_final_state(SN_0,	{Tokens::Num, Token_types::Inteiro});
 	scanner.add_final_state(SN_1_2,	{Tokens::Num, Token_types::Real});
 	scanner.add_final_state(SN_4,	{Tokens::Num, Token_types::SCI_NUM});
 
+	//EOF
 	scanner.add_final_state(SEOF,	{Tokens::EOF_t, Token_types::unknow});
 }

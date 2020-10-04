@@ -22,7 +22,7 @@ _OBJ = main.o LexicalAnalizer.o Automata.o helper.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 # headers
-_DEPS = LexicalAnalizer.h Automata.h helper.h
+_DEPS = LexicalAnalizer.h Automata.h helper.h utils.h
 DEPS = $(patsubst %,$(SRCDIR)/%,$(_DEPS))
 
 

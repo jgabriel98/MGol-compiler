@@ -2,6 +2,7 @@
     "files.associations": {
         "*.tcc": "cpp",
         "istream": "cpp",
-        "unordered_map": "cpp"
+        "unordered_map": "cpp",
+        "iosfwd": "cpp"
     }
 }

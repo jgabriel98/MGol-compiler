@@ -3,9 +3,10 @@
 
 #include "LexicalAnalizer.h"
 
-void pretty_print_token_attributes(Token_attributes t);
 void print_token_attributes(Token_attributes t);
-void compact_print_token_attributes(Token_attributes t);
+void full_print_token_attributes(Token_attributes &t, LexicalAnalizer &scanner);
+
+void print_simbols_table(LexicalAnalizer &scanner);
 
 
 string Tokens_to_string(Tokens t);
