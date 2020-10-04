@@ -87,7 +87,7 @@ public:
 
     void add_final_state(int state, pair<Tokens, Token_types> state_token_attributes, bool is_id_indicator = false);
 
-    void ignore_state(int state);
+    void ignore_final_state(int state);
     
 	Token_attributes analyze(istream &text_stream);
 

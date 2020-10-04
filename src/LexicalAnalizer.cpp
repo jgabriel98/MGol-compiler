@@ -40,7 +40,9 @@ void LexicalAnalizer::add_final_state(int state, pair<Tokens, Token_types> state
         id_final_states.insert(state);
 }
 
-void LexicalAnalizer::ignore_state(int state) {
+void LexicalAnalizer::ignore_final_state(int state) {
+    if(automata.is_final_state(state) == false)
+        throw new logic_error("Não foi possível ignorar o estado final '"+to_string(state)+"': não há registro deste estado final");
     ignored_final_states.insert(state);
 }
 

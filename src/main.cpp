@@ -140,8 +140,8 @@ void configura_analisador_lexico(LexicalAnalizer &scanner) {
 	scanner.add_final_state(SPV,	{Tokens::PT_V, Token_types::unknow});			//ponto e vírgula
 	scanner.add_final_state(SC_1,	{Tokens::Comentario, Token_types::unknow});		//comentário
 	scanner.add_final_state(SB,		{Tokens::Espaco, Token_types::unknow});		//comentário
-	scanner.ignore_state(SC_1);
-	scanner.ignore_state(SB);
+	scanner.ignore_final_state(SC_1);
+	scanner.ignore_final_state(SB);
 	
 	//numeros
 	scanner.add_final_state(SN_0,	{Tokens::Num, Token_types::Inteiro});
