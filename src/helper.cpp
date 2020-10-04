@@ -8,7 +8,7 @@ void print_token_attributes(Token_attributes t){
 }
 
 void full_print_token_attributes(Token_attributes &t, LexicalAnalizer &scanner){
-	printf("%-15.15s | %10.10s | %10.10s | ", t.lexema.c_str(), Tokens_to_string(t.token).c_str(), Token_types_to_string(t.tipo).c_str());
+	printf("%-20s | %10.10s | %10.10s | ", t.lexema.c_str(), Tokens_to_string(t.token).c_str(), Token_types_to_string(t.tipo).c_str());
 	if(scanner.error_s.peek() != EOF){
 		cout << scanner.error_s.rdbuf();
 	}
@@ -16,6 +16,7 @@ void full_print_token_attributes(Token_attributes &t, LexicalAnalizer &scanner){
 }
 
 void print_simbols_table(LexicalAnalizer &scanner) {
+	printf("********** TABELA DE SÍMBOLOS ***********\n");
 	printf("%-15.15s | %10.10s | %10.10s\n", "lexema", "token", "tipo");
 	printf("--------------- | ---------- | ----------\n");
 	for(auto &l: scanner.simbols_table){
@@ -43,6 +44,7 @@ string Tokens_to_string(Tokens t){
 		case Literal: return "Literal";
 		case id: return "id";
 		case Comentario: return "Comentario";
+		case Espaco: return "Espaco";
 		case EOF_t: return "EOF";
 		case OPR: return "OPR";
 		case RCB: return "RCB";
@@ -55,7 +57,7 @@ string Tokens_to_string(Tokens t){
 
 string Token_types_to_string(Token_types t) {
     switch(t){
-        case unknow: return "unknow";
+        case unknow: return "-";
         case Inteiro: return "Inteiro";
         case Real: return "Real";
         case SCI_NUM: return "SCI_NUM";
