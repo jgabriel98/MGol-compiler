@@ -7,13 +7,13 @@
 
 
 vector<char> LexicalAnalizer::wild_card(const vector<char> &ignore = {}){
-    char inicio_alfabeto = ' ';
-    char fim_alfabeto = '~';
+    char inicio_alfabeto = numeric_limits<char>::min();
+    char fim_alfabeto = numeric_limits<char>::max();
     
     vector<char> wild_card = vector<char>();
-    wild_card.reserve(fim_alfabeto - inicio_alfabeto +1);
+    wild_card.reserve(fim_alfabeto - inicio_alfabeto);
 
-    for(char c=inicio_alfabeto; c<=fim_alfabeto; c++){
+    for(char c=inicio_alfabeto; c < fim_alfabeto; c++){
         bool must_ignore = find(ignore.begin(), ignore.end(), c) != ignore.end();
 		if(!must_ignore)
 		    wild_card.push_back(c);
@@ -87,7 +87,7 @@ Token_attributes LexicalAnalizer::analyze(istream &text_stream) {
 
                 error_s.clear();
                 error_s << "Erro ao processar o lexema " << SetBOLD << token_attr.lexema << RESETTEXT << ": o caractere " << SetForeRED<<SetBOLD<< c << RESETTEXT 
-                        << " não foi reconhecido na linha " << line_count << " e coluna " << (column_count);                
+                        << " não foi reconhecido na linha " << line_count << " e coluna " << column_count;
             }
             
             break;
