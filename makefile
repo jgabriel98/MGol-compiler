@@ -1,7 +1,7 @@
 SHELL = /bin/sh
 CC=gcc				#C compiler
 CPPC=g++			#C++ compiler
-CFLAGS=-lz -lpthread -lm #standard g++ flags
+CFLAGS= #standard g++ flags
 
 ECHOMSG := "Normal compiling mode\n"
 
