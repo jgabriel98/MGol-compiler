@@ -1,0 +1,12 @@
+para compilar, rodar o comando make.
+
+As opções disponíveis são:
+ - make default (opção default)
+ - make fast (equilante a make opt2)
+ - make opt1    (compila com flag de otimização -O1)
+ - make opt2    (compila com flag de otimização -O2)
+ - make opt3    (compila com flag de otimização -O3)
+ - make debug   (compila com flags de debug)
+
+
+execute o arquivo 'mgc' gerado

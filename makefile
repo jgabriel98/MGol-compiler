@@ -131,7 +131,9 @@ all:
 clean:
 ifeq ($(OS),Windows)
 	@del "$(ODIR)\*.o"
+	@del $(EXEC)
 else
 	@find -name '*.o' -delete
+	@find -name '$(EXEC)' -delete
 endif
-	@echo 'deleted .o files'
+	@echo 'deleted .o files and executable'
