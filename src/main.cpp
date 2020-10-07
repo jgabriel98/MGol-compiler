@@ -30,16 +30,16 @@ int main() {
 	preenche_tabela_de_simbolos(scanner);
 
 	Token_attributes token;
-	//istringstream istr("es");
-	std::ifstream istr("example.mgol");
+	//istringstream istr("inicio\n\tvarinicio\nA<-2+4;");
+	std::ifstream istr("fonte.alg");
 
 	printf("%-20s | %10s | %10s | %s\n", "lexema", "token", "tipo", "erro");
-	printf("-------------------- | ---------- | ---------- | \n");
+	printf("==================== | ========== | ========== | =======\n");
 	do {
 		token = scanner.analyze(istr);
 		//imprimindo token
-		full_print_token_attributes(token, scanner);
-	} while (token.token != Tokens::EOF_t);
+		full_print_token_attributes(token, scanner, true);
+	} while (token.token != Tokens::EOF_t );
 	
 
 	printf("\n\n");
@@ -50,18 +50,18 @@ int main() {
 
 
 void preenche_tabela_de_simbolos(LexicalAnalizer &lexical_analizer) {
-	lexical_analizer.simbols_table["inicio"]	=	{Tokens::inicio,	Token_types::unknow, "inicio"};
-	lexical_analizer.simbols_table["varinicio"]	=	{Tokens::varinicio,	Token_types::unknow, "varinicio"};
-	lexical_analizer.simbols_table["varfim"]	=	{Tokens::varfim,	Token_types::unknow, "varfim"};
-	lexical_analizer.simbols_table["escreva"]	=	{Tokens::escreva,	Token_types::unknow, "escreva"};
-	lexical_analizer.simbols_table["leia"]		=	{Tokens::leia,		Token_types::unknow, "leia"};
-	lexical_analizer.simbols_table["se"]		=	{Tokens::se,		Token_types::unknow, "se"};
-	lexical_analizer.simbols_table["entao"]		=	{Tokens::entao,		Token_types::unknow, "entao"};
-	lexical_analizer.simbols_table["fimse"]		=	{Tokens::fimse,		Token_types::unknow, "fimse"};
-	lexical_analizer.simbols_table["fim"]		=	{Tokens::fim,		Token_types::unknow, "fim"};
-	lexical_analizer.simbols_table["inteiro"]	=	{Tokens::inteiro,	Token_types::unknow, "inteiro"};
-	lexical_analizer.simbols_table["lit"]		=	{Tokens::lit,		Token_types::unknow, "lit"};
-	lexical_analizer.simbols_table["real"]		=	{Tokens::real,		Token_types::unknow, "real"};
+	lexical_analizer.simbols_table.insert({Tokens::inicio,	Token_types::unknow, "inicio"});
+	lexical_analizer.simbols_table.insert({Tokens::varinicio,	Token_types::unknow, "varinicio"});
+	lexical_analizer.simbols_table.insert({Tokens::varfim,	Token_types::unknow, "varfim"});
+	lexical_analizer.simbols_table.insert({Tokens::escreva,	Token_types::unknow, "escreva"});
+	lexical_analizer.simbols_table.insert({Tokens::leia,		Token_types::unknow, "leia"});
+	lexical_analizer.simbols_table.insert({Tokens::se,		Token_types::unknow, "se"});
+	lexical_analizer.simbols_table.insert({Tokens::entao,		Token_types::unknow, "entao"});
+	lexical_analizer.simbols_table.insert({Tokens::fimse,		Token_types::unknow, "fimse"});
+	lexical_analizer.simbols_table.insert({Tokens::fim,		Token_types::unknow, "fim"});
+	lexical_analizer.simbols_table.insert({Tokens::inteiro,	Token_types::unknow, "inteiro"});
+	lexical_analizer.simbols_table.insert({Tokens::lit,		Token_types::unknow, "lit"});
+	lexical_analizer.simbols_table.insert({Tokens::real,		Token_types::unknow, "real"});
 }
 
 void configura_analisador_lexico(LexicalAnalizer &scanner) {
@@ -86,14 +86,14 @@ void configura_analisador_lexico(LexicalAnalizer &scanner) {
 
 	//literais
     scanner.add_transition(S0,          SL_0,           '"');
-	scanner.add_transition(SL_0,    	SL_0,           scanner.wild_card({'"'}));
+	scanner.add_transition(SL_0,    	SL_0,           scanner.wild_card({'"', EOF}));
 	scanner.add_transition(SL_0,        SL_1,           '"');
 
 	scanner.add_transition(S0,        	SEOF,           EOF);
 
 	//comentarios
 	scanner.add_transition(S0,        	SC_0,           '{');
-	scanner.add_transition(SC_0,       	SC_0,           scanner.wild_card({'}'}));
+	scanner.add_transition(SC_0,       	SC_0,           scanner.wild_card({'}', EOF}));
 	scanner.add_transition(SC_0,       	SC_1,           '}');
 	//espaços em branco
 	scanner.add_transition(S0,			SB,				{' ','\t','\n'});

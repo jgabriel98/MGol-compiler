@@ -25,12 +25,10 @@ vector<char> LexicalAnalizer::wild_card(const vector<char> &ignore = {}){
 
 LexicalAnalizer::LexicalAnalizer(int initial_state): automata(initial_state) {
     final_states_token_attr = unordered_map<int, pair<Tokens, Token_types>>();
-    error_s.clear();
 }
 
 LexicalAnalizer::LexicalAnalizer(int initial_state, int rejection_state): automata(initial_state, rejection_state) {
     final_states_token_attr = unordered_map<int, pair<Tokens, Token_types>>();
-    error_s.clear();
 }
 
 void LexicalAnalizer::add_final_state(int state, pair<Tokens, Token_types> state_token_attributes, bool is_id_indicator) {
@@ -66,8 +64,8 @@ Token_attributes LexicalAnalizer::analyze(istream &text_stream) {
         token_attr.lexema.push_back(c);
 
         if(new_state == automata.rejection_state()) {       //parou num estado de rejeição pq deu erro ou pq terminou de aceitar o lexema
-            if(automata.is_final_state(state)) {
-                text_stream.unget();
+            if(automata.is_final_state(state)) {	//terminou de aceitar um lexema
+				text_stream.unget();
 
                 if(is_ignored_final_state(state)) {
                     token_attr.lexema.clear();
@@ -75,10 +73,12 @@ Token_attributes LexicalAnalizer::analyze(istream &text_stream) {
                     continue;                
                 } else {
                     token_attr.lexema.pop_back();
+					token_attr.token = final_states_token_attr[state].first;
+					token_attr.tipo = final_states_token_attr[state].second;
 
-                    token_attr.token = final_states_token_attr[state].first;
-                    token_attr.tipo = final_states_token_attr[state].second;
-                    add_token_to_simbols_if_allowed(state, token_attr);
+                    if(is_id_state(state))
+                        token_attr = *(simbols_table.insert(token_attr).first);
+
                 }
 
             } else {    //deu erro mesmo
@@ -86,15 +86,15 @@ Token_attributes LexicalAnalizer::analyze(istream &text_stream) {
                 token_attr.tipo = Token_types::unknow;
 
                 error_s.clear();
-                error_s << "Erro ao processar o lexema " << SetBOLD << token_attr.lexema << RESETTEXT << ": o caractere " << SetForeRED<<SetBOLD<< c << RESETTEXT 
-                        << " não foi reconhecido na linha " << line_count << " e coluna " << column_count;
+                error_s << "Erro ao processar o lexema " << SetBOLD << SetForeYEL << token_attr.lexema << RESETTEXT << ": o caractere " << SetForeRED<<SetBOLD<< c << RESETTEXT 
+                        << " não foi reconhecido na linha " << line_count << " e coluna " << column_count << '\0';
             }
             
             break;
         } else {
             count_line_column(c);
         }
-        
+
         state = new_state;
     }
 

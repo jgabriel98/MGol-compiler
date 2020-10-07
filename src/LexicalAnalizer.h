@@ -4,9 +4,11 @@
 #include "Automata.h"
 #include "utils.h"
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -39,8 +41,20 @@ struct Token_attributes
     Tokens token;
     Token_types tipo;
     string lexema;
-    //string erro;
+
+    inline bool operator == (const Token_attributes &rhs) const {
+        return lexema == rhs.lexema;
+    }
+
 };
+
+template<> struct std::hash<Token_attributes> {
+	std::size_t operator()(const Token_attributes& t) const noexcept {
+		return std::hash<std::string>{}(t.lexema);
+	}
+};
+
+
 
 
 
@@ -55,11 +69,11 @@ private:
     unsigned int line_count = 1;
     unsigned int column_count = 1;
 
-    //verifica se o estado é de identificador, e se deve inserir na tabela de símbolos
-    inline void add_token_to_simbols_if_allowed(int state, Token_attributes &token_attr){
-        if(id_final_states.count(state) && !simbols_table.count(token_attr.lexema))
-            simbols_table.insert({token_attr.lexema,  token_attr});
+	//verifica se o estado é de identificador
+    inline bool is_id_state(int state){
+        return id_final_states.count(state);
     }
+
     inline bool is_ignored_final_state(int state){
         return ignored_final_states.count(state);
     }
@@ -73,7 +87,7 @@ private:
 public:
 
     stringstream error_s;
-    unordered_map<string, Token_attributes> simbols_table;
+    unordered_set<Token_attributes> simbols_table;
 
 
     LexicalAnalizer(int initial_state);

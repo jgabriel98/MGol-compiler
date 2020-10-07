@@ -1,5 +1,7 @@
 #include "helper.h"
 #include <iostream>
+#include "utils.h"
+#include <regex>
 
 void print_token_attributes(Token_attributes t){
 	printf("%s\t",Tokens_to_string(t.token).c_str());
@@ -7,11 +9,26 @@ void print_token_attributes(Token_attributes t){
 	printf("%s\t",t.lexema.c_str());
 }
 
-void full_print_token_attributes(Token_attributes &t, LexicalAnalizer &scanner){
-	printf("%-20s | %10.10s | %10.10s | ", t.lexema.c_str(), Tokens_to_string(t.token).c_str(), Token_types_to_string(t.tipo).c_str());
+void full_print_token_attributes(Token_attributes &t, LexicalAnalizer &scanner, bool split_between_lines){
+	string lexema = string_utils::wrap(t.lexema, 20, 20);
+	const char colum_style = split_between_lines ? ' ' : '|';
+	printf("%-20s %c %10.10s %c %10.10s %c ", lexema.c_str(), colum_style, 
+											  Tokens_to_string(t.token).c_str(), colum_style, 
+											  Token_types_to_string(t.tipo).c_str(), colum_style);
+	
 	if(scanner.error_s.peek() != EOF){
-		cout << scanner.error_s.rdbuf();
+		char buff;
+		while(!scanner.error_s.get(buff).eof()){
+			printf("%c", buff);
+			if(buff == '\n')
+				printf("%49.49s", "");
+		}
+		
 	}
+
+	if(split_between_lines)
+		printf("\n-------------------- | ---------- | ---------- | ------------------------------------- - - -  -  -  -");
+
 	printf("\n");
 }
 
@@ -19,8 +36,8 @@ void print_simbols_table(LexicalAnalizer &scanner) {
 	printf("********** TABELA DE SÍMBOLOS ***********\n");
 	printf("%-15.15s | %10.10s | %10.10s\n", "lexema", "token", "tipo");
 	printf("--------------- | ---------- | ----------\n");
-	for(auto &l: scanner.simbols_table){
-		Token_attributes &simbol = l.second;
+	for(auto &simbol: scanner.simbols_table){
+		//Token_attributes &simbol = l;
 		printf("%-15.15s | %10.10s | %10.10s\n", simbol.lexema.c_str(), Tokens_to_string(simbol.token).c_str(), Token_types_to_string(simbol.tipo).c_str());
 	}
 }
