@@ -24,22 +24,22 @@ void preenche_tabela_de_simbolos(LexicalAnalizer &lexical_analizer);
 
 
 int main() {
+	//istringstream istr("inicio\n\tvarinicio\nA<-2+4;");
+	std::ifstream istr("fonte.alg");
 
-    LexicalAnalizer scanner = LexicalAnalizer(S0, REJECT);
+    LexicalAnalizer scanner = LexicalAnalizer(istr, S0, REJECT);
 	configura_analisador_lexico(scanner);
 	preenche_tabela_de_simbolos(scanner);
 
 	Token_attributes token;
-	//istringstream istr("inicio\n\tvarinicio\nA<-2+4;");
-	std::ifstream istr("fonte.alg");
 
 	printf("%-20s | %10s | %10s | %s\n", "lexema", "token", "tipo", "erro");
 	printf("==================== | ========== | ========== | =======\n");
 	do {
-		token = scanner.analyze(istr);
+		token = scanner.analyze_next();
 		//imprimindo token
 		full_print_token_attributes(token, scanner, true);
-	} while (token.token != Tokens::EOF_t );
+	} while (token.token != Token::EOF_t );
 	
 
 	printf("\n\n");
@@ -50,18 +50,18 @@ int main() {
 
 
 void preenche_tabela_de_simbolos(LexicalAnalizer &lexical_analizer) {
-	lexical_analizer.simbols_table.insert({Tokens::inicio,	Token_types::unknow, "inicio"});
-	lexical_analizer.simbols_table.insert({Tokens::varinicio,	Token_types::unknow, "varinicio"});
-	lexical_analizer.simbols_table.insert({Tokens::varfim,	Token_types::unknow, "varfim"});
-	lexical_analizer.simbols_table.insert({Tokens::escreva,	Token_types::unknow, "escreva"});
-	lexical_analizer.simbols_table.insert({Tokens::leia,		Token_types::unknow, "leia"});
-	lexical_analizer.simbols_table.insert({Tokens::se,		Token_types::unknow, "se"});
-	lexical_analizer.simbols_table.insert({Tokens::entao,		Token_types::unknow, "entao"});
-	lexical_analizer.simbols_table.insert({Tokens::fimse,		Token_types::unknow, "fimse"});
-	lexical_analizer.simbols_table.insert({Tokens::fim,		Token_types::unknow, "fim"});
-	lexical_analizer.simbols_table.insert({Tokens::inteiro,	Token_types::unknow, "inteiro"});
-	lexical_analizer.simbols_table.insert({Tokens::lit,		Token_types::unknow, "lit"});
-	lexical_analizer.simbols_table.insert({Tokens::real,		Token_types::unknow, "real"});
+	lexical_analizer.simbols_table.insert({Token::inicio,	Token_type::unknow, "inicio"});
+	lexical_analizer.simbols_table.insert({Token::varinicio,	Token_type::unknow, "varinicio"});
+	lexical_analizer.simbols_table.insert({Token::varfim,	Token_type::unknow, "varfim"});
+	lexical_analizer.simbols_table.insert({Token::escreva,	Token_type::unknow, "escreva"});
+	lexical_analizer.simbols_table.insert({Token::leia,		Token_type::unknow, "leia"});
+	lexical_analizer.simbols_table.insert({Token::se,		Token_type::unknow, "se"});
+	lexical_analizer.simbols_table.insert({Token::entao,		Token_type::unknow, "entao"});
+	lexical_analizer.simbols_table.insert({Token::fimse,		Token_type::unknow, "fimse"});
+	lexical_analizer.simbols_table.insert({Token::fim,		Token_type::unknow, "fim"});
+	lexical_analizer.simbols_table.insert({Token::inteiro,	Token_type::unknow, "inteiro"});
+	lexical_analizer.simbols_table.insert({Token::lit,		Token_type::unknow, "lit"});
+	lexical_analizer.simbols_table.insert({Token::real,		Token_type::unknow, "real"});
 }
 
 void configura_analisador_lexico(LexicalAnalizer &scanner) {
@@ -122,32 +122,32 @@ void configura_analisador_lexico(LexicalAnalizer &scanner) {
 
     /********* configurando estados finais, e vinculando com seus respectivos atributos/tokens *********/
 
-	scanner.add_final_state(SL_1,	{Tokens::Literal, Token_types::unknow});	//literais
-	scanner.add_final_state(SID, 	{Tokens::id, Token_types::unknow}, true);	//identificador
-	scanner.add_final_state(SATR,	{Tokens::RCB, Token_types::unknow});		//atribuição
+	scanner.add_final_state(SL_1,	{Token::Literal, Token_type::unknow});	//literais
+	scanner.add_final_state(SID, 	{Token::id, Token_type::unknow}, true);	//identificador
+	scanner.add_final_state(SATR,	{Token::RCB, Token_type::unknow});		//atribuição
 
 	//operadores relacionais
-	scanner.add_final_state(SOPA,	{Tokens::OPM, Token_types::unknow});	
-	scanner.add_final_state(SOPR_1, {Tokens::OPR, Token_types::unknow});
-	scanner.add_final_state(SOPR_2, {Tokens::OPR, Token_types::unknow});
-	scanner.add_final_state(SOPR_3, {Tokens::OPR, Token_types::unknow});
-	scanner.add_final_state(SOPR_4, {Tokens::OPR, Token_types::unknow});
+	scanner.add_final_state(SOPA,	{Token::OPM, Token_type::unknow});	
+	scanner.add_final_state(SOPR_1, {Token::OPR, Token_type::unknow});
+	scanner.add_final_state(SOPR_2, {Token::OPR, Token_type::unknow});
+	scanner.add_final_state(SOPR_3, {Token::OPR, Token_type::unknow});
+	scanner.add_final_state(SOPR_4, {Token::OPR, Token_type::unknow});
 	
 	//parenteses
-	scanner.add_final_state(SPAR_0,	{Tokens::AB_P, Token_types::unknow});
-	scanner.add_final_state(SPAR_1,	{Tokens::FC_P, Token_types::unknow});
+	scanner.add_final_state(SPAR_0,	{Token::AB_P, Token_type::unknow});
+	scanner.add_final_state(SPAR_1,	{Token::FC_P, Token_type::unknow});
 
-	scanner.add_final_state(SPV,	{Tokens::PT_V, Token_types::unknow});			//ponto e vírgula
-	scanner.add_final_state(SC_1,	{Tokens::Comentario, Token_types::unknow});		//comentário
-	scanner.add_final_state(SB,		{Tokens::Espaco, Token_types::unknow});		//comentário
+	scanner.add_final_state(SPV,	{Token::PT_V, Token_type::unknow});			//ponto e vírgula
+	scanner.add_final_state(SC_1,	{Token::Comentario, Token_type::unknow});		//comentário
+	scanner.add_final_state(SB,		{Token::Espaco, Token_type::unknow});		//comentário
 	scanner.ignore_final_state(SC_1);
 	scanner.ignore_final_state(SB);
 	
 	//numeros
-	scanner.add_final_state(SN_0,	{Tokens::Num, Token_types::Inteiro});
-	scanner.add_final_state(SN_1_2,	{Tokens::Num, Token_types::Real});
-	scanner.add_final_state(SN_4,	{Tokens::Num, Token_types::SCI_NUM});
+	scanner.add_final_state(SN_0,	{Token::Num, Token_type::Inteiro});
+	scanner.add_final_state(SN_1_2,	{Token::Num, Token_type::Real});
+	scanner.add_final_state(SN_4,	{Token::Num, Token_type::SCI_NUM});
 
 	//EOF
-	scanner.add_final_state(SEOF,	{Tokens::EOF_t, Token_types::unknow});
+	scanner.add_final_state(SEOF,	{Token::EOF_t, Token_type::unknow});
 }

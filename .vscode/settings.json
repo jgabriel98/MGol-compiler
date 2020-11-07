@@ -5,6 +5,7 @@
         "unordered_map": "cpp",
         "iosfwd": "cpp",
         "regex": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "stdexcept": "cpp"
     }
 }

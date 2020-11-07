@@ -23,15 +23,15 @@ vector<char> LexicalAnalizer::wild_card(const vector<char> &ignore = {}){
 }
 
 
-LexicalAnalizer::LexicalAnalizer(int initial_state): automata(initial_state) {
-    final_states_token_attr = unordered_map<int, pair<Tokens, Token_types>>();
+LexicalAnalizer::LexicalAnalizer(istream &text_source, int initial_state): automata(initial_state), text_stream(text_source) {
+    final_states_token_attr = unordered_map<int, pair<Token, Token_type>>();
 }
 
-LexicalAnalizer::LexicalAnalizer(int initial_state, int rejection_state): automata(initial_state, rejection_state) {
-    final_states_token_attr = unordered_map<int, pair<Tokens, Token_types>>();
+LexicalAnalizer::LexicalAnalizer(istream &text_source, int initial_state, int rejection_state): automata(initial_state, rejection_state), text_stream(text_source) {
+    final_states_token_attr = unordered_map<int, pair<Token, Token_type>>();
 }
 
-void LexicalAnalizer::add_final_state(int state, pair<Tokens, Token_types> state_token_attributes, bool is_id_indicator) {
+void LexicalAnalizer::add_final_state(int state, pair<Token, Token_type> state_token_attributes, bool is_id_indicator) {
     final_states_token_attr[state] = state_token_attributes;
     automata.add_final_state(state);
     if(is_id_indicator)
@@ -53,7 +53,7 @@ void LexicalAnalizer::add_transition(int src, int dest, const vector<char> &list
         automata.add_transition(src, dest, c);
 }
 
-Token_attributes LexicalAnalizer::analyze(istream &text_stream) {
+Token_attributes LexicalAnalizer::analyze_next() {
     char c;
     int new_state, state = automata.initial_state();
     Token_attributes token_attr = {};
@@ -82,8 +82,8 @@ Token_attributes LexicalAnalizer::analyze(istream &text_stream) {
                 }
 
             } else {    //deu erro mesmo
-                token_attr.token = Tokens::ERRO;
-                token_attr.tipo = Token_types::unknow;
+                token_attr.token = Token::ERRO;
+                token_attr.tipo = Token_type::unknow;
 
                 error_s.clear();
                 error_s << "Erro ao processar o lexema " << SetBOLD << SetForeYEL << token_attr.lexema << RESETTEXT << ": o caractere " << SetForeRED<<SetBOLD<< c << RESETTEXT 

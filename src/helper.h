@@ -8,9 +8,10 @@ void full_print_token_attributes(Token_attributes &t, LexicalAnalizer &scanner, 
 
 void print_simbols_table(LexicalAnalizer &scanner);
 
+//todo: criar um aquivo enums.h que terá alguns enums, incluindo 'Token', e nele terá também as funções helpers relacionadas abaixo
+string Token_to_string(Token t);
+Token string_to_Token(string str);
 
-string Tokens_to_string(Tokens t);
-
-string Token_types_to_string(Token_types t);
+string Token_type_to_string(Token_type t);
 
 #endif
