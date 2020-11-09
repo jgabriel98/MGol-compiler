@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/mgc",
-            "args": [],
+            "args": ["fonte com erros.alg"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

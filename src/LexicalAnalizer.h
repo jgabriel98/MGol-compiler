@@ -44,7 +44,7 @@ enum Token_type {
 	unknow,
 	Inteiro,
 	Real,
-	SCI_NUM	 // notação cientifica
+	Cientifico	 // notação cientifica
 };
 
 struct Token_attributes {

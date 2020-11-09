@@ -18,11 +18,11 @@ EXEC = mgc
 
 # object files ( .o)
 ODIR = $(BDIR)
-_OBJ = main.o LexicalAnalizer.o Automata.o helper.o syntaxAnalysis/enums.o syntaxAnalysis/ActionTable.o syntaxAnalysis/CSVReader.o syntaxAnalysis/GotoTable.o syntaxAnalysis/SyntaxAnalizer.o
+_OBJ = main.o LexicalAnalizer.o Automata.o helper.o syntaxAnalysis/enums.o syntaxAnalysis/GrammarRule.o syntaxAnalysis/ActionTable.o syntaxAnalysis/CSVReader.o syntaxAnalysis/GotoTable.o syntaxAnalysis/SyntaxAnalizer.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 # headers
-_DEPS = LexicalAnalizer.h Automata.h helper.h utils.h color.h syntaxAnalysis/enums.h syntaxAnalysis/ActionTable.h syntaxAnalysis/CSVReader.h syntaxAnalysis/GotoTable.h syntaxAnalysis/SyntaxAnalizer.h
+_DEPS = LexicalAnalizer.h Automata.h helper.h utils.h color.h syntaxAnalysis/enums.h syntaxAnalysis/GrammarRule.h syntaxAnalysis/ActionTable.h syntaxAnalysis/CSVReader.h syntaxAnalysis/GotoTable.h syntaxAnalysis/SyntaxAnalizer.h
 DEPS = $(patsubst %,$(SRCDIR)/%,$(_DEPS))
 
 
