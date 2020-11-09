@@ -1,4 +1,3 @@
-&
 inicio
     varinicio
         A lit;
@@ -13,7 +12,7 @@ inicio
     leia A;
     se(B>2)
     entao       {teste de comentário}
-        se(B<=4.&)
+        se(B<=4)
         entao
             escreva "B esta entre 2 e 4";
         fimse
@@ -25,7 +24,7 @@ inicio
     D<-B;
     C<-5.0;
 
-    escreva "\nB=\n;
+    escreva "\nB=\n";
     escreva D;
     escreva "\n";
     escreva C;
