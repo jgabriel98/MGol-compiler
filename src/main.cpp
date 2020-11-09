@@ -18,8 +18,10 @@ const vector<char> LETRAS = {
 
 void configura_analisador_lexico(LexicalAnalizer& lexical_analizer);
 void preenche_tabela_de_simbolos(LexicalAnalizer& lexical_analizer);
+
 vector<GrammarRule> le_regras_gramaticais(const string& grammar_file_name);
 void le_conjuntos_follow(const string &follows_file_name, SyntaxAnalizer &parser);
+void preenche_mensagens_dos_codigos_de_erro(SyntaxAnalizer &parser);
 
 int main(int argc, char *argv[]) {
 	if (argc < 2) {
@@ -38,9 +40,9 @@ int main(int argc, char *argv[]) {
 	preenche_tabela_de_simbolos(scanner);
 
 	auto grammarRules = le_regras_gramaticais("resources/grammar.txt");
-	SyntaxAnalizer parser =
-		SyntaxAnalizer(grammarRules, "resources/tabela_action.csv", "resources/tabela_goto.csv", scanner);
+	SyntaxAnalizer parser = SyntaxAnalizer(grammarRules, "resources/tabela_action.csv", "resources/tabela_goto.csv", scanner);
 	le_conjuntos_follow("resources/conjuntos_follow.txt", parser);
+	preenche_mensagens_dos_codigos_de_erro(parser);
 
 	//############ TRABALHO T1 - ANALISADOR LÉXICO ############
 	Token_attributes token;
@@ -120,6 +122,27 @@ void le_conjuntos_follow(const string& follows_file_name, SyntaxAnalizer& parser
 	}
 
 	follow_file.close();
+}
+
+void preenche_mensagens_dos_codigos_de_erro(SyntaxAnalizer &parser) {
+	parser.errorCode_messages[0]  = "Esperava 'inicio', mas encontrou '%s'";
+	parser.errorCode_messages[1]  = "Encontrou '%s' depois de ler 'fim'";
+	parser.errorCode_messages[2]  = "Esperava abertura de bloco com 'varinicio', mas encontrou '%s'";
+	parser.errorCode_messages[3]  = "Esperava inicio de codigo de atribuição, condicional ou leia/escreva, mas encontrou '%s'" ;
+	parser.errorCode_messages[9]  = "Esperava identificador de uma variável, mas encontrou '%s'";
+	parser.errorCode_messages[10] = "Esperava um número, literal ou variável, mas encontrou '%s'";
+	parser.errorCode_messages[11] = "Esperava um ';', mas econtrou '%s'";
+	parser.errorCode_messages[15] = "Esperava atribuição, mas econtrou '%s'";
+	parser.errorCode_messages[16] = "Esperava um comando ou 'fimse', mas encontrou '%s'";
+	parser.errorCode_messages[17] = "Esperava (, mas encontrou '%s'";
+	parser.errorCode_messages[21] = "Esperava uma variável ou número à direita de atribuição, mas encontrou '%s'";
+	parser.errorCode_messages[35] = "Esperava declaração de variável, mas encontrou '%s'";
+	parser.errorCode_messages[41] = "Esperava tipo da variável (inteiro, real ou lit), mas encontrou '%s'";
+	parser.errorCode_messages[48] = "Esperava numeros ou variáveis na condicional, mas encontrou '%s'";
+	parser.errorCode_messages[49] = "Esperava ), mas encontrou '%s'";
+	parser.errorCode_messages[50] = "Esperava 'entao', mas encontrou '%s'";
+	parser.errorCode_messages[52] = "Esperava um operador relacional, mas encontrou '%s'";
+	parser.errorCode_messages[57] = "Esperava numeros ou variáveis na operação aritmética, mas encontrou '%s'";
 }
 
 void preenche_tabela_de_simbolos(LexicalAnalizer& lexical_analizer) {
@@ -217,7 +240,7 @@ void configura_analisador_lexico(LexicalAnalizer& scanner) {
 	// numeros
 	scanner.add_final_state(SN_0, {Token::num, Token_type::Inteiro});
 	scanner.add_final_state(SN_1_2, {Token::num, Token_type::Real});
-	scanner.add_final_state(SN_4, {Token::num, Token_type::SCI_NUM});
+	scanner.add_final_state(SN_4, {Token::num, Token_type::Cientifico});
 
 	// EOF
 	scanner.add_final_state(SEOF, {Token::EOF_t, Token_type::unknow});

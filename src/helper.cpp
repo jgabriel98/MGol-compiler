@@ -97,6 +97,7 @@ Token string_to_Token(string str) {
 	if(str == "(" || str == "AB_P" ) return AB_P;
 	if(str == ")" || str == "FC_P" ) return FC_P;
 	if(str == ";" || str == "PT_V" ) return PT_V;
+	if(str == "ERRO") return ERRO;
 	
 	throw runtime_error("Não foi possível converter a string '"+str+"' para o tipo "+typeid(Token).name());
 }
@@ -106,7 +107,7 @@ string Token_type_to_string(Token_type t) {
         case unknow: return "-";
         case Inteiro: return "Inteiro";
         case Real: return "Real";
-        case SCI_NUM: return "SCI_NUM";
+        case Cientifico: return "Cientifico";
     }
 	return nullptr;
 }

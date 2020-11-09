@@ -15,12 +15,12 @@ ActionTable::ActionTable(string table_csv) {
 // retorna um pair vazio quando não tem valor na tabela
 pair<Action, int> ActionTable::get(int state, Token terminal_simbol) {
 	if (terminal_to_columIdx.count(terminal_simbol) == 0)
-		return {};
+		return make_pair<Action, int>({}, -1);
 		
 	int c = terminal_to_columIdx[terminal_simbol];
 	string& value = table[state + 1][c];
 
-	if (value.empty()) return {};
+	if (value.empty()) return make_pair<Action, int>({}, -1);
 
 	// todo: ao inves de converter toda vez, é melhor pre-processar tudo no contrutor.
 	if (value[0] == 'A' || value[0] == 'a')
@@ -29,8 +29,11 @@ pair<Action, int> ActionTable::get(int state, Token terminal_simbol) {
 	Action action;
 	if (value[0] == 'R' || value[0] == 'r')
 		action = Action::Reduce;
-	if (value[0] == 's' || value[0] == 'S')
+	else if (value[0] == 's' || value[0] == 'S')
 		action = Action::Shift;
+	else if(value[0] == 'E' || value[0] == 'e')
+		action = Action::Error;
+
 
 	int goto_state = stoi(value.substr(1));
 	return {action, goto_state};
