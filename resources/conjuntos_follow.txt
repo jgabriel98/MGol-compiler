@@ -1,0 +1,16 @@
+P = $
+P = $
+V = leia escreva id se fim
+LV = leia escreva id se fim
+D = id varfim
+TIPO = ;
+A = $
+ES = leia escreva id se fim fimse
+ARG = ;
+CMD = leia escreva id se fim fimse
+LD = ;
+OPRD = ; opm opr )
+COND = leia escreva id se fimse fim
+CABECALHO = leia escreva id se fimse
+EXP_R = )
+CORPO = leia escreva id se fimse fim

@@ -25,16 +25,16 @@ enum Token {
 	inteiro,
 	lit,
 	real,  // palavras reservadas
-	Num,
-	Literal,
+	num,
+	literal,
 	id,
 	EOF_t,
-	OPR,   // operador relacional
-	RCB,   // atribuição
-	OPM,   // operador aritmetico
+	opr,   // operador relacional
+	rcb,   // atribuição
+	opm,   // operador aritmetico
 	AB_P,  //(
 	FC_P,  //)
-	PT_V,   //;
+	PT_V,  //;
 	ERRO,
 	Comentario,
 	Espaco
@@ -69,7 +69,7 @@ class LexicalAnalizer {
 	unordered_set<int> ignored_final_states;
 	unordered_map<int, pair<Token, Token_type>> final_states_token_attr;
 
-    istream &text_stream;
+	istream& text_stream;
 	unsigned int line_count = 1;
 	unsigned int column_count = 1;
 
@@ -90,9 +90,9 @@ class LexicalAnalizer {
 	stringstream error_s;
 	unordered_set<Token_attributes> simbols_table;
 
-	LexicalAnalizer(istream &text_source, int initial_state);
+	LexicalAnalizer(istream& text_source, int initial_state);
 
-	LexicalAnalizer(istream &text_source, int initial_state, int rejection_state);
+	LexicalAnalizer(istream& text_source, int initial_state, int rejection_state);
 
 	void add_transition(int src, int dest, char c);
 
@@ -104,6 +104,13 @@ class LexicalAnalizer {
 	void ignore_final_state(int state);
 
 	Token_attributes analyze_next();
+
+	inline unsigned int current_line() { return line_count; }
+	inline unsigned int current_colum() { return column_count; }
+	inline void rewind() {
+		text_stream.clear(); text_stream.seekg(0);
+		line_count = column_count = 1;
+	}
 
 	static vector<char> wild_card(const vector<char>& ignore);
 };
