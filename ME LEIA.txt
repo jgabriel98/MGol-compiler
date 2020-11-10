@@ -9,4 +9,4 @@ As opções disponíveis são:
  - make debug   (compila com flags de debug)
 
 
-execute o arquivo 'mgc' gerado
+execute o arquivo 'mgc' gerado, levando como argumento o arquivo MGol fonte.
