@@ -1,4 +1,6 @@
 bin/**
 mgc
 *.zip
+.vscode/
 .vscode/**
+.vscode/*

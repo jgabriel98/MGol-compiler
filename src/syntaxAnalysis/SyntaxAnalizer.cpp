@@ -65,8 +65,8 @@ void SyntaxAnalizer::analyze() {
 				while(std::getline(scanner.error_s, error, '\0'))
 					cout << RED("Erro léxico: ") << error << endl;
 			}
-
 			cout << RED("Erro sintático: ") << format_error_message(errorCode, simbolo) <<endl;
+			
 			if(simbolo.token == Token::EOF_t) break;
 			panic_mode_routine(&simbolo);
 		}
