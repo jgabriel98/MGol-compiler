@@ -56,23 +56,26 @@ void SyntaxAnalizer::analyze() {
 
 			cout << string(rule) << endl;
 		} else if (action == Action::Accept) {
-			cout << "parse completado - ";
-			if (total_erros) cout << SetBOLD FORELGTRED << total_erros << " erro(s) foi encontrado" << RESETTEXT << endl;
-			else 			 cout << SetBOLD FORELGTGRN << "Aceitou!" << RESETTEXT << endl;
+			cout << SetBOLD FORELGTGRN << "Aceitou!" << RESETTEXT << endl;
 			break;
 		} else {
 			total_erros++;
 			if (scanner.error_s.peek() != EOF) {  // se for erro lexico
 				string error;
-				std::getline(scanner.error_s, error);
-				cout << RED("Erro léxico: ") << error << endl;
+				while(std::getline(scanner.error_s, error, '\0'))
+					cout << RED("Erro léxico: ") << error << endl;
 			}
 
 			cout << RED("Erro sintático: ") << format_error_message(errorCode, simbolo) <<endl;
+			if(simbolo.token == Token::EOF_t) break;
 			panic_mode_routine(&simbolo);
-			if (simbolo.token == Token::EOF_t) break;
 		}
 	}
+
+	cout << "parse completado";
+	if (total_erros)
+		cout <<" - "<< SetBOLD FORELGTRED << total_erros << " erro(s) foi encontrado" << RESETTEXT << endl;
+		
 }
 
 string SyntaxAnalizer::format_error_message(int errorCode, const Token_attributes &foundToken){
