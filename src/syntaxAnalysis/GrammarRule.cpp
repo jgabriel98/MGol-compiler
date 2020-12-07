@@ -15,7 +15,6 @@ void GrammarRule::add_right(NonTerminalSimbol nonTerminal) {
 }
 
 NonTerminalSimbol GrammarRule::left() { return grammar_rule.first; }
-
 vector<GrammarRule::GrammarSimbol> GrammarRule::right() { return grammar_rule.second; }
 
 GrammarRule::operator std::string() {

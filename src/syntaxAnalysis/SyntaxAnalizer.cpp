@@ -49,7 +49,7 @@ void SyntaxAnalizer::analyze() {
 			simbolo = scanner.analyze_next();
 		} else if (action == Action::Reduce) {
 			auto& rule = grammarRules[ruleNum - 1];
-			for (auto& each : rule.right()) pilha.pop(); 
+			for (auto& each : rule.right()) pilha.pop();
 
 			topo = pilha.top();
 			pilha.push(gotoTable.get(topo, rule.left()));
