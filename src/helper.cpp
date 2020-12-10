@@ -3,23 +3,25 @@
 #include "utils.h"
 #include <regex>
 
-void print_token_attributes(Token_attributes t){
-	printf("%s\t",Token_to_string(t.token).c_str());
-	printf("%s\t",Token_type_to_string(t.tipo).c_str());
-	printf("%s\t",t.lexema.c_str());
-}
+#include "semanticAnalysis/SemanticAnalysis.h"
 
-void full_print_token_attributes(Token_attributes &t, LexicalAnalizer &scanner, bool split_between_lines){
+// void print_token_attributes(GrammarSimbol_attributes &t){
+// 	printf("%s\t",Token_to_string(t.token.simbol.asTerminal).c_str());
+// 	printf("%s\t",Token_type_to_string(t.tipo).c_str());
+// 	printf("%s\t",t.lexema.c_str());
+// }
+
+void full_print_token_attributes(GrammarSimbol_attributes &t, std::stringstream &scanner_err_buffer, bool split_between_lines){
 	string lexema = string_utils::wrap(t.lexema, 20, 20);
 	const char colum_style = split_between_lines ? ' ' : '|';
 	printf("%-20s %c %10.10s %c %10.10s %c ", lexema.c_str(), colum_style, 
-											  Token_to_string(t.token).c_str(), colum_style, 
+											  Token_to_string(t.token.simbol.asTerminal).c_str(), colum_style, 
 											  Token_type_to_string(t.tipo).c_str(), colum_style);
 	
 	
-	while(scanner.error_s.peek() != EOF){
+	while(scanner_err_buffer.peek() != EOF){
 		char buff;
-		scanner.error_s.get(buff);
+		scanner_err_buffer.get(buff);
 		printf("%c", buff);
 		if(buff == '\n')
 			printf("%49.49s", "");
@@ -32,82 +34,14 @@ void full_print_token_attributes(Token_attributes &t, LexicalAnalizer &scanner, 
 	printf("\n");
 }
 
-void print_simbols_table(LexicalAnalizer &scanner) {
-	printf("********** TABELA DE SÍMBOLOS ***********\n");
-	printf("%-15.15s | %10.10s | %10.10s\n", "lexema", "token", "tipo");
-	printf("--------------- | ---------- | ----------\n");
-	for(auto &simbol: scanner.simbols_table){
-		//Token_attributes &simbol = l;
-		printf("%-15.15s | %10.10s | %10.10s\n", simbol.lexema.c_str(), Token_to_string(simbol.token).c_str(), Token_type_to_string(simbol.tipo).c_str());
-	}
-}
+// void print_simbols_table(LexicalAnalizer &scanner) {
+// 	printf("********** TABELA DE SÍMBOLOS ***********\n");
+// 	printf("%-15.15s | %10.10s | %10.10s\n", "lexema", "token", "tipo");
+// 	printf("--------------- | ---------- | ----------\n");
+// 	for(auto &simbol: scanner.simbols_table){
+// 		//Token_attributes &simbol = l;
+// 		printf("%-15.15s | %10.10s | %10.10s\n", simbol->lexema.c_str(), Token_to_string(simbol->token.simbol.asTerminal).c_str(), Token_type_to_string(simbol->tipo).c_str());
+// 	}
+// }
 
-string Token_to_string(Token t) {
-	switch(t){
-		case ERRO: return "ERRO";
-		case inicio: return "inicio";
-		case varinicio: return "varinicio";
-		case varfim: return "varfim";
-		case escreva: return "escreva";
-		case leia: return "leia";
-		case se: return "se";
-		case entao: return "entao";
-		case fimse: return "fimse";
-		case fim: return "fim";
-		case inteiro: return "inteiro";
-		case lit: return "lit";
-		case real: return "real";
-		case num: return "num";
-		case literal: return "literal";
-		case id: return "id";
-		case Comentario: return "Comentario";
-		case Espaco: return "Espaco";
-		case EOF_t: return "EOF";
-		case opr: return "opr";
-		case rcb: return "rcb";
-		case opm: return "opm";
-		case AB_P: return /*"AB_P"*/"(";
-		case FC_P: return /*"FC_P"*/")";
-		case PT_V: return /*"PT_V"*/";";
-	}
-	return nullptr;
-}
 
-Token string_to_Token(string str) {
-	
-	if(str == "inicio" ) return inicio;
-	if(str == "varinicio" ) return varinicio;
-	if(str == "varfim" ) return varfim;
-	if(str == "escreva" ) return escreva;
-	if(str == "leia" ) return leia;
-	if(str == "se" ) return se;
-	if(str == "entao" ) return entao;
-	if(str == "fimse" ) return fimse;
-	if(str == "fim" ) return fim;
-	if(str == "inteiro" ) return inteiro;
-	if(str == "lit" ) return lit;
-	if(str == "real" ) return real;
-	if(str == "num" ) return num;
-	if(str == "literal" ) return literal;
-	if(str == "id" ) return id;
-	if(str == "EOF" || str == "$" ) return EOF_t;
-	if(str == "opr" ) return opr;
-	if(str == "rcb" ) return rcb;
-	if(str == "opm" ) return opm;
-	if(str == "(" || str == "AB_P" ) return AB_P;
-	if(str == ")" || str == "FC_P" ) return FC_P;
-	if(str == ";" || str == "PT_V" ) return PT_V;
-	if(str == "ERRO") return ERRO;
-	
-	throw runtime_error("Não foi possível converter a string '"+str+"' para o tipo "+typeid(Token).name());
-}
-
-string Token_type_to_string(Token_type t) {
-    switch(t){
-        case unknow: return "-";
-        case Inteiro: return "Inteiro";
-        case Real: return "Real";
-        case Cientifico: return "Cientifico";
-    }
-	return nullptr;
-}

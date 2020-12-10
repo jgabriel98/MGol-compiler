@@ -6,64 +6,20 @@
 #include <vector>
 #include "Automata.h"
 #include "utils.h"
+#include "enums.h"
+#include "semanticAnalysis/SemanticAnalysis.h"
 
 #include <sstream>
 #include <string>
 
 using namespace std;
 
-enum Token {
-	inicio,
-	varinicio,
-	varfim,
-	escreva,
-	leia,
-	se,
-	entao,
-	fimse,
-	fim,
-	inteiro,
-	lit,
-	real,  // palavras reservadas
-	num,
-	literal,
-	id,
-	EOF_t,
-	opr,   // operador relacional
-	rcb,   // atribuição
-	opm,   // operador aritmetico
-	AB_P,  //(
-	FC_P,  //)
-	PT_V,  //;
-	ERRO,
-	Comentario,
-	Espaco
-};
-
-enum Token_type {
-	unknow,
-	Inteiro,
-	Real,
-	Cientifico	 // notação cientifica
-};
-
-struct Token_attributes {
-	Token token;
-	Token_type tipo;
-	string lexema;
-
-	inline bool operator==(const Token_attributes& rhs) const { return lexema == rhs.lexema; }
-};
-
-template <>
-struct std::hash<Token_attributes> {
-	inline std::size_t operator()(const Token_attributes& t) const noexcept {
-		return std::hash<std::string>{}(t.lexema);
-	}
-};
+typedef unordered_set<GrammarSimbol_attributes *, GrammarSimbol_attr_ptr_hash, GrammarSimbol_attr_ptr_eq> SimbolsTable;
 
 class LexicalAnalizer {
    private:
+	GrammarSimbol_attributes *current_simbol = new GrammarSimbol_attributes();
+
 	Automata automata;
 	unordered_set<int> id_final_states;
 	unordered_set<int> ignored_final_states;
@@ -88,11 +44,15 @@ class LexicalAnalizer {
 
    public:
 	stringstream error_s;
-	unordered_set<Token_attributes> simbols_table;
+	SimbolsTable simbols_table;
+
+	LexicalAnalizer(const LexicalAnalizer & orig);
 
 	LexicalAnalizer(istream& text_source, int initial_state);
 
 	LexicalAnalizer(istream& text_source, int initial_state, int rejection_state);
+
+	~LexicalAnalizer(){ delete current_simbol; }
 
 	void add_transition(int src, int dest, char c);
 
@@ -103,13 +63,18 @@ class LexicalAnalizer {
 
 	void ignore_final_state(int state);
 
-	Token_attributes analyze_next();
+	GrammarSimbol_attributes& analyze_next();
 
 	inline unsigned int current_line() { return line_count; }
 	inline unsigned int current_colum() { return column_count; }
 	inline void rewind() {
-		text_stream.clear(); text_stream.seekg(0);
+		text_stream.clear(); text_stream.seekg(0); error_s.clear();
 		line_count = column_count = 1;
+		vector<GrammarSimbol_attributes *> identifiers;
+		for (auto& id : simbols_table)
+			if (id->token.simbol.asTerminal == Token::id) identifiers.push_back(id);
+
+		for (auto& id : identifiers) simbols_table.erase(id);
 	}
 
 	static vector<char> wild_card(const vector<char>& ignore);

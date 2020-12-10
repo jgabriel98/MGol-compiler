@@ -1,4 +1,5 @@
 #include "GrammarRule.h"
+#include <sstream>
 
 void GrammarRule::left(NonTerminalSimbol simbol) { grammar_rule.first = simbol; }
 
@@ -9,13 +10,10 @@ void GrammarRule::add_right(Token terminal) {
 
 void GrammarRule::add_right(NonTerminalSimbol nonTerminal) {
 	GrammarSimbol simbol;
-	simbol.simbol.nonTerminal = nonTerminal;
+	simbol.simbol.asNonTerminal = nonTerminal;
 	simbol.isTerminal = false;
 	grammar_rule.second.push_back(simbol);
 }
-
-NonTerminalSimbol GrammarRule::left() { return grammar_rule.first; }
-vector<GrammarRule::GrammarSimbol> GrammarRule::right() { return grammar_rule.second; }
 
 GrammarRule::operator std::string() {
 	std::stringstream ss;

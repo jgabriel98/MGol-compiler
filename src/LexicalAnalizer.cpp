@@ -22,7 +22,9 @@ vector<char> LexicalAnalizer::wild_card(const vector<char> &ignore = {}){
     return wild_card;
 }
 
-
+LexicalAnalizer::LexicalAnalizer(const LexicalAnalizer & orig): automata(orig.automata), text_stream(orig.text_stream){
+		final_states_token_attr = unordered_map<int, pair<Token, Token_type>>();
+	}
 LexicalAnalizer::LexicalAnalizer(istream &text_source, int initial_state): automata(initial_state), text_stream(text_source) {
     final_states_token_attr = unordered_map<int, pair<Token, Token_type>>();
 }
@@ -53,40 +55,44 @@ void LexicalAnalizer::add_transition(int src, int dest, const vector<char> &list
         automata.add_transition(src, dest, c);
 }
 
-Token_attributes LexicalAnalizer::analyze_next() {
+GrammarSimbol_attributes& LexicalAnalizer::analyze_next() {
     char c;
     int new_state, state = automata.initial_state();
-    Token_attributes token_attr = {};
+    current_simbol = new GrammarSimbol_attributes();
+    GrammarSimbol_attributes *token_attr = current_simbol;
     
     while (true) {
         c = text_stream.peek(); text_stream.get();
         new_state = automata.process_char(state, c);
-        token_attr.lexema.push_back(c);
+        token_attr->lexema.push_back(c);
 
         if(new_state == automata.rejection_state()) {       //parou num estado de rejeição pq deu erro ou pq terminou de aceitar o lexema
             if(automata.is_final_state(state)) {	//terminou de aceitar um lexema
 				text_stream.unget();
 
                 if(is_ignored_final_state(state)) {
-                    token_attr.lexema.clear();
+                    token_attr->lexema.clear();
                     state = automata.initial_state();
                     continue;                
                 } else {
-                    token_attr.lexema.pop_back();
-					token_attr.token = final_states_token_attr[state].first;
-					token_attr.tipo = final_states_token_attr[state].second;
+                    token_attr->lexema.pop_back();
+					token_attr->token = final_states_token_attr[state].first;
+					token_attr->tipo = final_states_token_attr[state].second;
 
-                    if(is_id_state(state))
-                        token_attr = *(simbols_table.insert(token_attr).first);
+                    if(is_id_state(state)){
+                        simbols_table.insert(token_attr).first;
+                        token_attr = *simbols_table.find(token_attr);
+                        //current_simbol = new Token_attributes();
+                    }
 
                 }
 
             } else {    //deu erro mesmo
-                token_attr.token = Token::ERRO;
-                token_attr.tipo = Token_type::unknow;
+                token_attr->token = Token::ERRO;
+                token_attr->tipo = Token_type::unknow;
 
                 error_s.clear();
-                error_s << "Erro ao processar o lexema " << SetBOLD << SetForeYEL << token_attr.lexema << RESETTEXT << ": o caractere " << SetForeRED<<SetBOLD<< c << RESETTEXT 
+                error_s << "Erro ao processar o lexema " << SetBOLD << SetForeYEL << token_attr->lexema << RESETTEXT << ": o caractere " << SetForeRED<<SetBOLD<< c << RESETTEXT 
                         << " não foi reconhecido na linha " << line_count << " e coluna " << column_count << '\0';
             }
             
@@ -98,5 +104,5 @@ Token_attributes LexicalAnalizer::analyze_next() {
         state = new_state;
     }
 
-    return token_attr;
+    return *token_attr;
 }
