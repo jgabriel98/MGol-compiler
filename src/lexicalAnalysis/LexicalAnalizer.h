@@ -1,16 +1,16 @@
 #ifndef LEXICAL_ANALIZER_HEADER
 #define LEXICAL_ANALIZER_HEADER
 
+#include <sstream>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-#include "Automata.h"
-#include "utils.h"
-#include "enums.h"
-#include "semanticAnalysis/SemanticAnalysis.h"
 
-#include <sstream>
-#include <string>
+#include "../semanticAnalysis/SemanticAnalysis.h"
+#include "../utils.h"
+#include "Automata.h"
+#include "enums.h"
 
 using namespace std;
 

@@ -1,10 +1,10 @@
 #include "LexicalAnalizer.h"
+
 #include <algorithm>
 #include <iostream>
 #include <string>
 
-#include "color.h"
-
+#include "../color.h"
 
 vector<char> LexicalAnalizer::wild_card(const vector<char> &ignore = {}){
     char inicio_alfabeto = numeric_limits<char>::min();

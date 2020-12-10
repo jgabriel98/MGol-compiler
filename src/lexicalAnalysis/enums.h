@@ -2,7 +2,6 @@
 #define LEXICAL_ENUMS_HEADER
 
 #include <string>
-#include <stdexcept>
 
 using namespace std;
 

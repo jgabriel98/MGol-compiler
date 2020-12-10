@@ -1,10 +1,10 @@
 #ifndef SYNTAX_ANALIZER_HEADER
 #define SYNTAX_ANALIZER_HEADER
 
-#include <iostream>
+
 #include <stack>
 
-#include "../LexicalAnalizer.h"
+#include "../lexicalAnalysis/LexicalAnalizer.h"
 #include "../helper.h"
 #include "ActionTable.h"
 #include "GotoTable.h"

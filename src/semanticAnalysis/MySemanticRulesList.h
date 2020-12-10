@@ -8,7 +8,7 @@
 #include <vector>
 #include <sstream>
 
-#include "../LexicalAnalizer.h"
+#include "../lexicalAnalysis/LexicalAnalizer.h"
 #include "SemanticAnalysis.h"
 
 using namespace std;

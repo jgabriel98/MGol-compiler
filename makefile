@@ -18,11 +18,11 @@ EXEC = mgc
 
 # object files ( .o)
 ODIR = $(BDIR)
-_OBJ = main.o LexicalAnalizer.o Automata.o enums.o helper.o syntaxAnalysis/enums.o syntaxAnalysis/GrammarRule.o syntaxAnalysis/ActionTable.o syntaxAnalysis/CSVReader.o syntaxAnalysis/GotoTable.o syntaxAnalysis/SyntaxAnalizer.o semanticAnalysis/SemanticAnalysis.o semanticAnalysis/MySemanticRulesList.o
+_OBJ = main.o helper.o lexicalAnalysis/LexicalAnalizer.o lexicalAnalysis/Automata.o lexicalAnalysis/enums.o syntaxAnalysis/enums.o syntaxAnalysis/GrammarRule.o syntaxAnalysis/ActionTable.o syntaxAnalysis/CSVReader.o syntaxAnalysis/GotoTable.o syntaxAnalysis/SyntaxAnalizer.o semanticAnalysis/SemanticAnalysis.o semanticAnalysis/MySemanticRulesList.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 # headers
-_DEPS = LexicalAnalizer.h enums.h Automata.h semanticAnalysis/SemanticAnalysis.h helper.h utils.h color.h syntaxAnalysis/enums.h syntaxAnalysis/GrammarRule.h syntaxAnalysis/ActionTable.h syntaxAnalysis/CSVReader.h syntaxAnalysis/GotoTable.h syntaxAnalysis/SyntaxAnalizer.h semanticAnalysis/SemanticAnalysis.h semanticAnalysis/MySemanticRulesList.h
+_DEPS = helper.h utils.h color.h lexicalAnalysis/LexicalAnalizer.h lexicalAnalysis/enums.h lexicalAnalysis/Automata.h semanticAnalysis/SemanticAnalysis.h syntaxAnalysis/enums.h syntaxAnalysis/GrammarRule.h syntaxAnalysis/ActionTable.h syntaxAnalysis/CSVReader.h syntaxAnalysis/GotoTable.h syntaxAnalysis/SyntaxAnalizer.h semanticAnalysis/SemanticAnalysis.h semanticAnalysis/MySemanticRulesList.h
 DEPS = $(patsubst %,$(SRCDIR)/%,$(_DEPS))
 
 

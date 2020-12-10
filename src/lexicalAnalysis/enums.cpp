@@ -1,4 +1,6 @@
 #include "enums.h"
+#include <stdexcept>
+
 
 string Token_to_string(Token t) {
 	switch(t){

@@ -1,7 +1,7 @@
 #ifndef SYNTAX_ANALIZER_GRAMMAR_RULE_HEADER
 #define SYNTAX_ANALIZER_GRAMMAR_RULE_HEADER
 
-#include "../enums.h"
+#include "../lexicalAnalysis/enums.h"
 #include "enums.h"
 #include <vector>
 

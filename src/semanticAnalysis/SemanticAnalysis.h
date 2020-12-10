@@ -1,8 +1,6 @@
 #ifndef GRAMMAR_ATTR_HEADER
 #define GRAMMAR_ATTR_HEADER
 
-#include <stack>
-
 #include "../syntaxAnalysis/GrammarRule.h"
 
 using namespace std;

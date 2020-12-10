@@ -1,6 +1,8 @@
 #include "SyntaxAnalizer.h"
 
 #include <stdio.h>
+#include <iostream>
+#include <algorithm>
 #include "../color.h"
 
 SyntaxAnalizer::SyntaxAnalizer(vector<GrammarRule> grammarRules, string actionsTable_csv, string gotoTable_csv,

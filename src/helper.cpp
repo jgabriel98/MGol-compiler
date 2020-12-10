@@ -1,15 +1,15 @@
 #include "helper.h"
-#include <iostream>
+#include <sstream>
 #include "utils.h"
-#include <regex>
+//#include <regex>
 
 #include "semanticAnalysis/SemanticAnalysis.h"
 
-// void print_token_attributes(GrammarSimbol_attributes &t){
-// 	printf("%s\t",Token_to_string(t.token.simbol.asTerminal).c_str());
-// 	printf("%s\t",Token_type_to_string(t.tipo).c_str());
-// 	printf("%s\t",t.lexema.c_str());
-// }
+void print_token_attributes(GrammarSimbol_attributes &t){
+	printf("%s\t",Token_to_string(t.token.simbol.asTerminal).c_str());
+	printf("%s\t",Token_type_to_string(t.tipo).c_str());
+	printf("%s\t",t.lexema.c_str());
+}
 
 void full_print_token_attributes(GrammarSimbol_attributes &t, std::stringstream &scanner_err_buffer, bool split_between_lines){
 	string lexema = string_utils::wrap(t.lexema, 20, 20);
@@ -34,14 +34,14 @@ void full_print_token_attributes(GrammarSimbol_attributes &t, std::stringstream 
 	printf("\n");
 }
 
-// void print_simbols_table(LexicalAnalizer &scanner) {
-// 	printf("********** TABELA DE SÍMBOLOS ***********\n");
-// 	printf("%-15.15s | %10.10s | %10.10s\n", "lexema", "token", "tipo");
-// 	printf("--------------- | ---------- | ----------\n");
-// 	for(auto &simbol: scanner.simbols_table){
-// 		//Token_attributes &simbol = l;
-// 		printf("%-15.15s | %10.10s | %10.10s\n", simbol->lexema.c_str(), Token_to_string(simbol->token.simbol.asTerminal).c_str(), Token_type_to_string(simbol->tipo).c_str());
-// 	}
-// }
+void print_simbols_table(LexicalAnalizer &scanner) {
+	printf("********** TABELA DE SÍMBOLOS ***********\n");
+	printf("%-15.15s | %10.10s | %10.10s\n", "lexema", "token", "tipo");
+	printf("--------------- | ---------- | ----------\n");
+	for(auto &simbol: scanner.simbols_table){
+		//Token_attributes &simbol = l;
+		printf("%-15.15s | %10.10s | %10.10s\n", simbol->lexema.c_str(), Token_to_string(simbol->token.simbol.asTerminal).c_str(), Token_type_to_string(simbol->tipo).c_str());
+	}
+}
 
 

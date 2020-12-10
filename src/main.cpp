@@ -1,5 +1,5 @@
-#include "LexicalAnalizer.h"
 #include "helper.h"
+#include "lexicalAnalysis/LexicalAnalizer.h"
 #include "syntaxAnalysis/SyntaxAnalizer.h"
 #include "semanticAnalysis/SemanticAnalysis.h"
 #include "semanticAnalysis/MySemanticRulesList.h"

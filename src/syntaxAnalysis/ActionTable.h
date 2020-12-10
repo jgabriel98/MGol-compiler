@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../enums.h"
+#include "../lexicalAnalysis/enums.h"
 #include "enums.h"
 
 using namespace std;

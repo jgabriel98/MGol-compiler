@@ -3,8 +3,6 @@
 
 #include <boost/algorithm/string.hpp>
 #include <fstream>
-#include <string>
-#include <vector>
 
 CSVReader::CSVReader(std::string filename, std::string delm) : fileName(filename), delimeter(delm) {}
 
